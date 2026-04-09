@@ -1,37 +1,40 @@
 package com.example.backend.service;
 
-import com.example.backend.entity.Student;
-import com.example.backend.repository.StudentRepository;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.example.backend.entity.Student;
+import com.example.backend.repository.StudentRepository;
 
 @Service
 public class StudentService {
 
-    private final StudentRepository repo;
+    @Autowired
+    private StudentRepository repository;
 
-    public StudentService(StudentRepository repo) {
-        this.repo = repo;
-    }
-
-    public Student addStudent(Student student) {
-        return repo.save(student);
+    public Student saveStudent(Student student) {
+        return repository.save(student);
     }
 
     public List<Student> getAllStudents() {
-        return repo.findAll();
+        return repository.findAll();
     }
 
-    public Student updateStudent(Long id, Student student) {
-        Student existing = repo.findById(id).orElseThrow();
-        existing.setName(student.getName());
-        existing.setEmail(student.getEmail());
-        existing.setCourse(student.getCourse());
-        return repo.save(existing);
+    public Student getStudentById(Long id) {
+        return repository.findById(id).orElseThrow();
+    }
+
+    public Student updateStudent(Long id, Student updatedStudent) {
+        Student student = repository.findById(id).orElseThrow();
+        student.setName(updatedStudent.getName());
+        student.setEmail(updatedStudent.getEmail());
+        student.setCourse(updatedStudent.getCourse());
+        return repository.save(student);
     }
 
     public void deleteStudent(Long id) {
-        repo.deleteById(id);
+        repository.deleteById(id);
     }
 }
